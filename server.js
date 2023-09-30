@@ -25,7 +25,7 @@ app.get('/',(req,res) => {
     res.send('Server is ready')
 })
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = process.env.MONGO_URL;
+const uri = "mongodb+srv://oistream:H8sVnAHkfo0k5V11@oistream.fda4hmn.mongodb.net/test?retryWrites=true&w=majority";
 mongoose.connect(uri)
   .then(()=> console.log('You successfully connected to MongoDB!!!!.........'))
   .catch(err => console.log(err));
