@@ -7,7 +7,7 @@ const cors = require('cors');
 const testRoutes = require('./routes/testRoute');
 const appVersion = require('./routes/appVersion');
 const versionRouter = require('./routes/versionRouter');
-
+const authorization = require('./routes/loginRegister');
 
 const { mongoose } = require('mongoose');
 dotenv.config();  
@@ -18,9 +18,12 @@ app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 app.use(cors());
 // app.use('/app', AppRoutes);
 // app.use('/version', versionRoutes);
+
 app.use('/test', testRoutes);
 app.use('/appversion',appVersion);
 app.use('/version',versionRouter);
+app.use('/authorization',authorization);
+
 app.get('/',(req,res) => {
     res.send('Server is ready')
 })
