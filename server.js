@@ -7,6 +7,8 @@ const cors = require('cors');
 const testRoutes = require('./routes/testRoute');
 const appVersion = require('./routes/appVersion');
 const versionRouter = require('./routes/versionRouter');
+
+
 const { mongoose } = require('mongoose');
 dotenv.config();  
 const port = process.env.PORT || 5000;
@@ -23,8 +25,7 @@ app.get('/',(req,res) => {
     res.send('Server is ready')
 })
 const { MongoClient, ServerApiVersion } = require('mongodb');
-MONGO_URL = "mongodb+srv://oistream:H8sVnAHkfo0k5V11@oistream.fda4hmn.mongodb.net/?retryWrites=true&w=majority"
-const uri = MONGO_URL;
+const uri = process.env.MONGO_URL;
 mongoose.connect(uri)
   .then(()=> console.log('You successfully connected to MongoDB!!!!.........'))
   .catch(err => console.log(err));

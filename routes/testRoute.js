@@ -6,6 +6,11 @@ const Version = require("../model/Version");
 const fetcher = require('./fetcher');
 const { default: mongoose } = require("mongoose");
 const k8s = require("@kubernetes/client-node");
+const fs = require('fs');
+const crypto = require('crypto');
+const AWS = require('aws-sdk');
+const randomFloat = Math.random().toString();
+
 const kubeconfigText = `
 apiVersion: v1
 clusters:
@@ -159,11 +164,328 @@ var mmService = {
     type: "ClusterIP",
   },
 };
+
+// var kanikoPod = {
+//   apiVersion: "batch/v1",
+//   kind: "Job",
+//   metadata: {
+//     name: "kaniko",
+//   },
+//   spec: {
+//     template: {
+//       spec: {
+//         containers: [
+//           {
+//             name: "kaniko",
+//             image: "gcr.io/kaniko-project/executor:latest",
+//             args: [
+//               "--dockerfile=tpp/Dockerfile",
+//               "--context=s3://letsfindsolutions-fileupload2/tpp.tar.gz",
+//               "--destination=gaddamvinay/repo:",
+//             ],
+//             env: [
+//               {
+//                 name: "AWS_SHARED_CREDENTIALS_FILE",
+//                 value: "/kaniko/.docker/aws/credentials",
+//               },
+//               {
+//                 name: "AWS_DEFAULT_REGION",
+//                 value: "ap-south-1",
+//               },
+//               {
+//                 name: "AWS_ACCESS_KEY_ID",
+//                 value: "AKIAVDWPRTUWE2NE25UQ",
+//               },
+//               {
+//                 name: "AWS_SECRET_ACCESS_KEY",
+//                 value: "zvUzf+hq0b9/gX2fEsYmHT6A9UEWYh+/k7M7Dq9w",
+//               },
+//             ],
+//             volumeMounts: [
+//               {
+//                 name: "docker-registry-secret",
+//                 mountPath: "/kaniko/.docker",
+//               },
+//               {
+//                 name: "aws-credentials",
+//                 mountPath: "/kaniko/.docker/aws",
+//               },
+//             ],
+//           },
+//         ],
+//         volumes: [
+//           {
+//             name: "docker-registry-secret",
+//             secret: {
+//               secretName: "dockerhub-g",
+//             },
+//           },
+//           {
+//             name: "aws-credentials",
+//             secret: {
+//               secretName: "aws-credentials",
+//             },
+//           },
+//         ],
+//         restartPolicy: "Never", // Job Pods should not restart
+//       },
+//     },
+//     backoffLimit: 0, // Number of retries, set to 0 for no retries
+//   },
+// };
+
+var kanikoPod = {
+  apiVersion: "v1",
+  kind: "Pod",
+  metadata: {
+    name: "kaniko",
+  },
+  spec: {
+    containers: [
+      {
+        name: "kaniko",
+        image: "gcr.io/kaniko-project/executor:latest",
+        args: [
+          "--dockerfile=tpp/Dockerfile",
+          "--context=s3://letsfindsolutions-fileupload2/tpp.tar.gz",
+          "--destination=gaddamvinay/repo:simple"
+        ],
+        env: [
+          {
+            name: "AWS_SHARED_CREDENTIALS_FILE",
+            value: "/kaniko/.docker/aws/credentials",
+          },
+          {
+            name: "AWS_DEFAULT_REGION",
+            value: "ap-south-1",
+          },
+          {
+            name: "AWS_ACCESS_KEY_ID",
+            value: "AKIAVDWPRTUWE2NE25UQ",
+          },
+          {
+            name: "AWS_SECRET_ACCESS_KEY",
+            value: "zvUzf+hq0b9/gX2fEsYmHT6A9UEWYh+/k7M7Dq9w",
+          },
+        ],
+        volumeMounts: [
+          {
+            name: "docker-registry-secret",
+            mountPath: "/kaniko/.docker",
+          },
+          {
+            name: "aws-credentials",
+            mountPath: "/kaniko/.docker/aws",
+          },
+        ],
+      },
+    ],
+    restartPolicy: "Never",
+    volumes: [
+      {
+        name: "docker-registry-secret",
+        secret: {
+          secretName: "dockerhub-g",
+        },
+      },
+      {
+        name: "aws-credentials",
+        secret: {
+          secretName: "aws-credentials",
+        },
+      },
+    ],
+  },
+};
+
+function generateUniqueHash(data) {
+  const hash = crypto.createHash('sha256'); // You can choose a different algorithm if needed
+  hash.update(data);
+  return hash.digest('hex'); // 'hex' output format will give you a hexadecimal string
+}
+
+function getRandomIntAsString(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  const randomInt = Math.floor(Math.random() * (max - min)) + min;
+  return randomInt.toString();
+}
+
+
 const namespace = "tenant-74334f-oidev";
+const k8sApiff = kc.makeApiClient(k8s.CoreV1Api);
+async function checkPodStatus(podNamess) {
+  let completed = false;
+  
+  while (!completed) {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // fs.appendFile("logs.txt", `Reached here after status first\n`, () => {});
+      const response = await k8sApiff.readNamespacedPodStatus(podNamess, namespace);
+      // fs.appendFile("logs.txt", `Reached here after status second\n`, () => {});
+      const phase = response.body.status.phase;
+      fs.appendFile("logs.txt", `${phase}\n`, () => {});
+      if (phase === 'Succeeded') {
+        // console.log("reached here");
+        completed = true;
+      } else if (phase === 'Failed' || phase === 'Unknown') {
+        fs.appendFile("logs.txt", `Pod ${podNamess} has failed or is in an unknown state.\n`, () => {});
+        break; // Exit the loop if the Pod is in a failed or unknown state
+      }
+    } catch (error) {
+      fs.appendFile("logs.txt", `Error: ${error}\n`, () => {});
+      break; // Exit the loop in case of an error
+    }
+
+    // Wait for a few seconds before checking again (adjust the interval as needed)
+  }
+}
+
+
+// Now you have the Kaniko Deployment configuration as a JSON variable.
+
+router.post("/checkename", (req, res) => {
+  Bname = req.body.name;
+  if(Bname === "")
+  {
+    res.status(403).json({ message: "Enter Proper Application Name"});
+  }
+  Application.findOne({ name: Bname})
+  .then((existingModel) => {
+    if (existingModel) {
+      console.log("Application with that already exists");
+      return res.status(400).json({ error: "Name already exists" });
+    } else {
+      res.status(200).json({ message: "You can proceed with the Application Name"});
+    }
+})
+});
+
 router.post("/create", (req, res) => {
   Bname = req.body.name;
   Bregistry = req.body.registry;
+  filename = req.body.filename;
+  console.log("Here at top , Error has ",Bregistry);
+  const min = 1; // Minimum value (inclusive)
+  const max = 100; // Maximum value (exclusive)
+  const randomInt = getRandomIntAsString(min, max);
+  if(req.body.registry == "kanikonoregistry"){ 
+    fs.writeFile("logs.txt", "", () => {});
+    kanikoPod.metadata.name = "kaniko" + randomInt;
+    kanikoPod.spec.containers[0].args[0] = "--dockerfile=" + req.body.filename + "/Dockerfile";
+    kanikoPod.spec.containers[0].args[1] = "--context=s3://letsfindsolutions-fileupload2/" + req.body.filename + ".tar.gz";
+    kanikoPod.spec.containers[0].args[2] = "--destination=gaddamvinay/repo:" + req.body.name;
+    Bregistry = "gaddamvinay/repo:" + req.body.name;
+    k8sApiff.createNamespacedPod(namespace, kanikoPod);
+    // res.status(201).json({ message: "hello"});
+    checkPodStatus(kanikoPod.metadata.name).then(() => {
+      fs.appendFile("logs.txt", "Reached here finally\n", (err) => {});
+      k8sApiff.deleteNamespacedPod(kanikoPod.metadata.name, namespace);
+      const awsConfig = {
+        accessKeyId: "AKIAVDWPRTUWE2NE25UQ",
+        secretAccessKey: "zvUzf+hq0b9/gX2fEsYmHT6A9UEWYh+/k7M7Dq9w",
+        region: 'ap-south-1', // Change to your desired AWS region
+      };
+      
+      // Create an S3 client
+      const s3 = new AWS.S3(awsConfig);
+      
+      // Specify the bucket name and the key (file path) of the file you want to delete
+      const bucketName = "letsfindsolutions-fileupload2";
+      const key = req.body.filename + ".tar.gz";
+      
+      // Define the parameters for the delete operation
+      const params = {
+        Bucket: bucketName,
+        Key: key,
+      };
+      
+      // Call the deleteObject method to delete the file
+      s3.deleteObject(params, (err, data) => {
+        if (err) {
+          console.error(`Error deleting file: ${err}`);
+        } else {
+          console.log(`File deleted successfully`);
+        }``
+      });
+      Application.findOne({ name: Bname})
+      .then((existingModel) => {
+        if (existingModel) {
+          console.log("Application with that already exists");
+          return res.status(400).json({ error: "Name already exists" });
+        } else {
+          const newVersion = new Version({
+            versionname: "0",
+            registry: Bregistry,
+            link: "matchmaking" +
+            "-" +
+            req.body.name +
+            ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
+            createdAt: Date.now(),
+          });
+          console.log("trying to create version with"+newVersion);
+          newVersion.save()
+            .then((createdVersion) => {
+              console.log("Version created successfully   4"+ createdVersion);
+              const newApplication = new Application({
+                name: Bname, 
+                versions: [createdVersion._id],
+                activeversion: createdVersion._id,
+              });
+              console.log("trying to create application with"+newApplication);
+              newApplication.save()
+                .then(() => {
+                  console.log("Application created successfully   3");
+                  res.status(201).json({ message: newApplication.name });
+                })
+                .catch((err) => {
+                  console.log("Failed to create application   2"+ err);
+                  res.status(500).json({ error: "Failed to create application" });
+                });
+            })
+            .catch((err) => {
+              console.log("Failed to create version  100");
+              res.status(500).json({ error: "Failed to create version" });
+            });
+          const deployname = Bname;
+          const registryname = Bregistry;
+          mmDeployment.metadata.name = "mm-deployment" + "-" + deployname;
+          mmDeployment.metadata.labels.app = "mm" + "-" + deployname;
+          mmDeployment.spec.selector.matchLabels.app = "mm" + "-" + deployname;
+          mmDeployment.spec.template.metadata.labels.app =
+            "mm" + "-" + deployname;
+          mmDeployment.spec.template.spec.containers[0].name =
+            "mm-containers" + "-" + deployname;
+          mmDeployment.spec.template.spec.containers[0].args[3] = deployname;
+          if (registryname!= undefined)
+            mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
+          mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
+          mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+          mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
+          mmService.metadata.name = "mm-service" + "-" + deployname;
+          mmService.spec.selector.app = "mm" + "-" + deployname;
+          const k8sApia = kc.makeApiClient(k8s.AppsV1Api);
+          k8sApia.createNamespacedDeployment(namespace, mmDeployment);
+          const k8sApib = kc.makeApiClient(k8s.CoreV1Api);
+          k8sApib.createNamespacedService(namespace, mmService);
+          const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
+          k8sApic.createNamespacedIngress(namespace, mmIngress);
+        }
+        
+      })
+      .catch((err) => {
+        console.error(err);
+        console.log("Came here 0");
+        res.status(500).json({ error: "Database ,Server error" });
+      });
+    });
+
+    // fs.appendFile("logs.txt", "Reached here\n", (err) => {});
+
+  }
+  else{
   console.log("Have to create Application with name: " + Bname + " and registry: " + Bregistry);
+  // res.status(201).json({ message: "hello"});
   Application.findOne({ name: Bname})
     .then((existingModel) => {
       if (existingModel) {
@@ -191,16 +513,16 @@ router.post("/create", (req, res) => {
             console.log("trying to create application with"+newApplication);
             newApplication.save()
               .then(() => {
-                console.log("Application created successfully   3");
+                console.log("Application created successfully   1032");
                 res.status(201).json({ message: newApplication.name });
               })
               .catch((err) => {
-                console.log("Failed to create application   2"+ err);
+                console.log("Failed to create application   1032"+ err);
                 res.status(500).json({ error: "Failed to create application" });
               });
           })
           .catch((err) => {
-            console.log("Failed to create version  1");
+            console.log("Failed to create version  1 here neeraj");
             res.status(500).json({ error: "Failed to create version" });
           });
         const deployname = Bname;
@@ -227,13 +549,17 @@ router.post("/create", (req, res) => {
         const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
         k8sApic.createNamespacedIngress(namespace, mmIngress);
       }
+      
     })
     .catch((err) => {
       console.error(err);
       console.log("Came here 0");
       res.status(500).json({ error: "Database ,Server error" });
     });
+  }
+
 });
+
 
 router.get("/", async (req, res) => {
   try {
