@@ -8,7 +8,7 @@ const testRoutes = require('./routes/testRoute');
 const appVersion = require('./routes/appVersion');
 const versionRouter = require('./routes/versionRouter');
 const authorization = require('./routes/loginRegister');
-
+const dashboard = require('./routes/dashboard');
 const { mongoose } = require('mongoose');
 dotenv.config();  
 const port = process.env.PORT || 5000;
@@ -23,6 +23,7 @@ app.use('/test', testRoutes);
 app.use('/appversion',appVersion);
 app.use('/version',versionRouter);
 app.use('/authorization',authorization);
+app.use('/dashb',dashboard);
 
 app.get('/',(req,res) => {
     res.send('Server is ready')
