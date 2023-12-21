@@ -548,12 +548,12 @@ router.post("/create", (req, res) => {
               })
               .catch((err) => {
                 console.log("Failed to create application   1032"+ err);
-                res.status(500).json({ error: "Failed to create application" });
+                return res.status(500).json({ error: "Failed to create application" });
               });
           })
           .catch((err) => {
             console.log("Failed to create version  1 here neeraj");
-            res.status(500).json({ error: "Failed to create version" });
+            return res.status(500).json({ error: "Failed to create version" });
           });
         const deployname = Bname;
         const registryname = Bregistry;
