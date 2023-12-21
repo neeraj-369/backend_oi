@@ -464,7 +464,7 @@ router.post("/create", (req, res) => {
               newApplication.save()
                 .then(() => {
                   console.log("Application created successfully   3");
-                  res.status(201).json({ message: newApplication.name });
+                  res.status(201).json({ message: Bname });
                 })
                 .catch((err) => {
                   console.log("Failed to create application   2"+ err);
@@ -539,12 +539,12 @@ router.post("/create", (req, res) => {
               versions: [createdVersion._id],
               activeversion: createdVersion._id,
             });
-            console.log(newApplication.name)
+            console.log(Bname)
             console.log("trying to create application with"+newApplication);
             newApplication.save()
               .then(() => {
                 console.log("Application created successfully   1032");
-                res.status(201).json({ message: newApplication.name });
+                res.status(201).json({ message: Bname });
               })
               .catch((err) => {
                 console.log("Failed to create application   1032"+ err);
