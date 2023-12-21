@@ -100,8 +100,20 @@ var mmIngress = {
   kind: "Ingress",
   metadata: {
     name: "mm-ingress",
+    annotations: {
+      'kubernetes.io/ingress.class': 'traefik',
+      'nginx.ingress.kubernetes.io/rewrite-target': '/',
+      'traefik.ingress.kubernetes.io/router.middlewares': 'tenant-74334f-oidev-redirect-secure@kubernetescrd',
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
+      },
   },
   spec: {
+	  tls: [
+      {
+        hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
+        secretName: 'redirect-secure-ssl',
+      },
+    ],
     rules: [
       {
         host: "matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
@@ -125,6 +137,22 @@ var mmIngress = {
     ],
   },
 };
+
+var jsonMiddleware = {
+	apiVersion: 'traefik.containo.us/v1alpha1',
+	kind: 'Middleware',
+	metadata: {
+	  name: 'redirect-secure',
+	  namespace: 'tenant-74334f-oidev',
+	},
+	spec: {
+	  redirectScheme: {
+		regex: '^http://(.*)',
+		replacement: 'https://${1}',
+	  },
+	},
+  };
+
 var mmService = {
   apiVersion: "v1",
   kind: "Service",
@@ -470,6 +498,8 @@ router.post("/create", (req, res) => {
           k8sApib.createNamespacedService(namespace, mmService);
           const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
           k8sApic.createNamespacedIngress(namespace, mmIngress);
+          const middlewareApi = kc.makeApiClient(k8s.TraefikV1alpha1Api);
+          middlewareApi.createNamespacedMiddleware(namespace, jsonMiddleware);
         }
         
       })
@@ -548,6 +578,8 @@ router.post("/create", (req, res) => {
         k8sApib.createNamespacedService(namespace, mmService);
         const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
         k8sApic.createNamespacedIngress(namespace, mmIngress);
+				const middlewareApi = kc.makeApiClient(k8s.TraefikV1alpha1Api);
+				middlewareApi.createNamespacedMiddleware(namespace, jsonMiddleware);
       }
       
     })
