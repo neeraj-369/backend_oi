@@ -110,7 +110,7 @@ var mmIngress = {
   spec: {
 	  tls: [
       {
-        hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
+        hosts: ['matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
         secretName: 'redirect-secure-ssl',
       },
     ],
@@ -488,6 +488,7 @@ router.post("/create", (req, res) => {
           if (registryname!= undefined)
             mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
+          mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
@@ -501,7 +502,6 @@ router.post("/create", (req, res) => {
           const middlewareApi = kc.makeApiClient(k8s.TraefikV1alpha1Api);
           middlewareApi.createNamespacedMiddleware(namespace, jsonMiddleware);
         }
-        
       })
       .catch((err) => {
         console.error(err);
@@ -509,9 +509,7 @@ router.post("/create", (req, res) => {
         res.status(500).json({ error: "Database ,Server error" });
       });
     });
-
     // fs.appendFile("logs.txt", "Reached here\n", (err) => {});
-
   }
   else{
   console.log("Have to create Application with name: " + Bname + " and registry: " + Bregistry);
@@ -532,6 +530,7 @@ router.post("/create", (req, res) => {
           createdAt: Date.now(),
         });
         console.log("trying to create version with"+newVersion);
+        
         newVersion.save()
           .then((createdVersion) => {
             console.log("Version created successfully   4"+ createdVersion);
@@ -540,6 +539,7 @@ router.post("/create", (req, res) => {
               versions: [createdVersion._id],
               activeversion: createdVersion._id,
             });
+            console.log(newApplication.name)
             console.log("trying to create application with"+newApplication);
             newApplication.save()
               .then(() => {
@@ -568,6 +568,7 @@ router.post("/create", (req, res) => {
         if (registryname!= undefined)
           mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
+        mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
