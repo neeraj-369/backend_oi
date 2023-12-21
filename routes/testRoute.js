@@ -100,20 +100,8 @@ var mmIngress = {
   kind: "Ingress",
   metadata: {
     name: "mm-ingress",
-    annotations: {
-      'kubernetes.io/ingress.class': 'traefik',
-      'nginx.ingress.kubernetes.io/rewrite-target': '/',
-      'traefik.ingress.kubernetes.io/router.middlewares': 'tenant-74334f-oidev-redirect-secure@kubernetescrd',
-      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
-      },
   },
   spec: {
-	  tls: [
-      {
-        hosts: ['matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
-        secretName: 'redirect-secure-ssl',
-      },
-    ],
     rules: [
       {
         host: "matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
@@ -137,22 +125,6 @@ var mmIngress = {
     ],
   },
 };
-
-var jsonMiddleware = {
-	apiVersion: 'traefik.containo.us/v1alpha1',
-	kind: 'Middleware',
-	metadata: {
-	  name: 'redirect-secure',
-	  namespace: 'tenant-74334f-oidev',
-	},
-	spec: {
-	  redirectScheme: {
-		regex: '^http://(.*)',
-		replacement: 'https://${1}',
-	  },
-	},
-  };
-
 var mmService = {
   apiVersion: "v1",
   kind: "Service",
@@ -464,7 +436,7 @@ router.post("/create", (req, res) => {
               newApplication.save()
                 .then(() => {
                   console.log("Application created successfully   3");
-                  res.status(201).json({ message: Bname });
+                  res.status(201).json({ message: newApplication.name });
                 })
                 .catch((err) => {
                   console.log("Failed to create application   2"+ err);
@@ -488,7 +460,6 @@ router.post("/create", (req, res) => {
           if (registryname!= undefined)
             mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-          mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
@@ -499,9 +470,8 @@ router.post("/create", (req, res) => {
           k8sApib.createNamespacedService(namespace, mmService);
           const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
           k8sApic.createNamespacedIngress(namespace, mmIngress);
-          const middlewareApi = kc.makeApiClient(k8s.TraefikV1alpha1Api);
-          middlewareApi.createNamespacedMiddleware(namespace, jsonMiddleware);
         }
+        
       })
       .catch((err) => {
         console.error(err);
@@ -509,7 +479,9 @@ router.post("/create", (req, res) => {
         res.status(500).json({ error: "Database ,Server error" });
       });
     });
+
     // fs.appendFile("logs.txt", "Reached here\n", (err) => {});
+
   }
   else{
   console.log("Have to create Application with name: " + Bname + " and registry: " + Bregistry);
@@ -530,7 +502,6 @@ router.post("/create", (req, res) => {
           createdAt: Date.now(),
         });
         console.log("trying to create version with"+newVersion);
-        
         newVersion.save()
           .then((createdVersion) => {
             console.log("Version created successfully   4"+ createdVersion);
@@ -539,21 +510,20 @@ router.post("/create", (req, res) => {
               versions: [createdVersion._id],
               activeversion: createdVersion._id,
             });
-            console.log(Bname)
             console.log("trying to create application with"+newApplication);
             newApplication.save()
               .then(() => {
                 console.log("Application created successfully   1032");
-                res.status(201).json({ message: Bname });
+                res.status(201).json({ message: newApplication.name });
               })
               .catch((err) => {
                 console.log("Failed to create application   1032"+ err);
-                return res.status(500).json({ error: "Failed to create application" });
+                res.status(500).json({ error: "Failed to create application" });
               });
           })
           .catch((err) => {
             console.log("Failed to create version  1 here neeraj");
-            return res.status(500).json({ error: "Failed to create version" });
+            res.status(500).json({ error: "Failed to create version" });
           });
         const deployname = Bname;
         const registryname = Bregistry;
@@ -568,7 +538,6 @@ router.post("/create", (req, res) => {
         if (registryname!= undefined)
           mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-        mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
@@ -579,8 +548,6 @@ router.post("/create", (req, res) => {
         k8sApib.createNamespacedService(namespace, mmService);
         const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
         k8sApic.createNamespacedIngress(namespace, mmIngress);
-				const middlewareApi = kc.makeApiClient(k8s.TraefikV1alpha1Api);
-				middlewareApi.createNamespacedMiddleware(namespace, jsonMiddleware);
       }
       
     })
