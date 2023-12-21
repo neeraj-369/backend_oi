@@ -100,8 +100,20 @@ var mmIngress = {
   kind: "Ingress",
   metadata: {
     name: "mm-ingress",
+    annotations: {
+      'kubernetes.io/ingress.class': 'traefik',
+      'nginx.ingress.kubernetes.io/rewrite-target': '/',
+      'traefik.ingress.kubernetes.io/router.middlewares': 'tenant-74334f-oidev-redirect-secure@kubernetescrd',
+      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
+      },
   },
   spec: {
+    tls: [
+      {
+        hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
+        secretName: 'redirect-secure-ssl',
+      },
+    ],
     rules: [
       {
         host: "matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
@@ -460,6 +472,7 @@ router.post("/create", (req, res) => {
           if (registryname!= undefined)
             mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
+          mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
@@ -538,6 +551,7 @@ router.post("/create", (req, res) => {
         if (registryname!= undefined)
           mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
+        mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
