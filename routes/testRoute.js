@@ -146,12 +146,12 @@ var mmIngress = {
       },
   },
   spec: {
-    // tls: [
-      // {
-      //   hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
-      //   secretName: 'redirect-secure-ssl',
-      // },
-    // ],
+    tls: [
+      {
+        hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
+        secretName: 'redirect-secure-ssl',
+      },
+    ],
     rules: [
       {
         host: "matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
@@ -512,7 +512,8 @@ router.post("/create", (req, res) => {
           mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
           mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-          // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+          mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+          mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
           mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
@@ -595,7 +596,8 @@ router.post("/create", (req, res) => {
         mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
         mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-        // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+        mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+        mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
         mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
