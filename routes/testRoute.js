@@ -103,7 +103,7 @@ var mmDeployment = {
 };
 
 var mmHpa = {
-  apiVersion: "autoscaling/v2",
+  apiVersion: "autoscaling/v1",
   kind: "HorizontalPodAutoscaler",
   metadata: {
     name: "mm-hpa",
@@ -146,12 +146,12 @@ var mmIngress = {
       },
   },
   spec: {
-    tls: [
-      {
-        hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
-        secretName: 'redirect-secure-ssl',
-      },
-    ],
+    // tls: [
+      // {
+      //   hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
+      //   secretName: 'redirect-secure-ssl',
+      // },
+    // ],
     rules: [
       {
         host: "matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
@@ -512,7 +512,7 @@ router.post("/create", (req, res) => {
           mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
           mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-          mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+          // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
@@ -523,7 +523,7 @@ router.post("/create", (req, res) => {
           k8sApib.createNamespacedService(namespace, mmService);
           const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
           k8sApic.createNamespacedIngress(namespace, mmIngress);
-          const k8sApihpa = kc.makeApiClient(k8s.AutoscalingV2beta2Api);
+          const k8sApihpa = kc.makeApiClient(k8s.AutoscalingV1Api);
           k8sApihpa.createNamespacedHorizontalPodAutoscaler(namespace, mmHpa)
         }
         
@@ -595,7 +595,7 @@ router.post("/create", (req, res) => {
         mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
         mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-        mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+        // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
@@ -606,7 +606,7 @@ router.post("/create", (req, res) => {
         k8sApib.createNamespacedService(namespace, mmService);
         const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
         k8sApic.createNamespacedIngress(namespace, mmIngress);
-        const k8sApihpa = kc.makeApiClient(k8s.AutoscalingV2beta2Api);
+        const k8sApihpa = kc.makeApiClient(k8s.AutoscalingV1Api);
         k8sApihpa.createNamespacedHorizontalPodAutoscaler(namespace, mmHpa)
       }
       
