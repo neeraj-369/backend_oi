@@ -88,12 +88,50 @@ var mmDeployment = {
                 protocol: "UDP",
               },
             ],
+            resources: {
+              limits: {
+                cpu: '4',
+                memory: '20Gi',
+                'nvidia.com/gpu': 3
+              }
+            }
           },
         ],
       },
     },
   },
 };
+
+var mmHpa = {
+  apiVersion: "autoscaling/v2",
+  kind: "HorizontalPodAutoscaler",
+  metadata: {
+    name: "mm-hpa",
+  },
+  spec: {
+    scaleTargetRef: {
+      apiVersion: "apps/v1",
+      kind: "Deployment",
+      name: "mm-deployment",
+    },
+    minReplicas: 1,
+    maxReplicas: 20,
+    metrics: [
+      {
+        type: "Resource",
+        resource: {
+          name: "cpu",
+          target: {
+            type: "Utilization",
+            averageUtilization: 75,
+          },
+        },
+      },
+    ],
+  },
+};
+
+
 
 var mmIngress = {
   apiVersion: "networking.k8s.io/v1",
@@ -471,6 +509,8 @@ router.post("/create", (req, res) => {
           mmDeployment.spec.template.spec.containers[0].args[3] = deployname;
           if (registryname!= undefined)
             mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
+          mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
+          mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
           mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
           mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
@@ -483,6 +523,8 @@ router.post("/create", (req, res) => {
           k8sApib.createNamespacedService(namespace, mmService);
           const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
           k8sApic.createNamespacedIngress(namespace, mmIngress);
+          const k8sApihpa = kc.makeApiClient(k8s.AutoscalingV2beta2Api);
+          k8sApihpa.createNamespacedHorizontalPodAutoscaler(namespace, mmHpa)
         }
         
       })
@@ -550,6 +592,8 @@ router.post("/create", (req, res) => {
         mmDeployment.spec.template.spec.containers[0].args[3] = deployname;
         if (registryname!= undefined)
           mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
+        mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
+        mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
         mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
         mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
@@ -562,6 +606,8 @@ router.post("/create", (req, res) => {
         k8sApib.createNamespacedService(namespace, mmService);
         const k8sApic = kc.makeApiClient(k8s.NetworkingV1Api);
         k8sApic.createNamespacedIngress(namespace, mmIngress);
+        const k8sApihpa = kc.makeApiClient(k8s.AutoscalingV2beta2Api);
+        k8sApihpa.createNamespacedHorizontalPodAutoscaler(namespace, mmHpa)
       }
       
     })
@@ -743,6 +789,7 @@ router.delete("/:id", async (req, res) => {
             var ingressNamei  = "app-ingress-" + hash;
             var podNamei = "pixel-streaming-pod-" + hash;
 
+
             console.log("while deleting application : " + hash)
             const k8sApi1 = kc.makeApiClient(k8s.CoreV1Api);
             k8sApi1
@@ -782,7 +829,8 @@ router.delete("/:id", async (req, res) => {
               .catch((error) => {
                 console.error(`Error deleting ingress: ${error}`);
             });
-         
+
+
     });
     }
   });
