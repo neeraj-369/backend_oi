@@ -148,8 +148,8 @@ var mmIngress = {
   spec: {
     tls: [
       {
-        hosts: ['timeapp.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
-        secretName: 'redirect-secure-ssl',
+        hosts: ['matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
+        secretName: 'redirect-secure-ssl-matchmaking',
       },
     ],
     rules: [
@@ -467,10 +467,7 @@ router.post("/create", (req, res) => {
           const newVersion = new Version({
             versionname: "0",
             registry: Bregistry,
-            link: "matchmaking" +
-            "-" +
-            req.body.name +
-            ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
+            link: "https://application.oistream.com/" + req.body.name,
             createdAt: Date.now(),
           });
           console.log("trying to create version with"+newVersion);
@@ -511,10 +508,10 @@ router.post("/create", (req, res) => {
             mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
           mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
           mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
-          mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-          mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
-          mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
-          mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+          // mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
+          // mmIngress.spec.tls[0].hosts[0] = "matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud/" + deployname;
+          // mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
+          mmIngress.spec.rules[0].http.paths[0].path = "/" + deployname;
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
           mmService.spec.selector.app = "mm" + "-" + deployname;
@@ -551,10 +548,7 @@ router.post("/create", (req, res) => {
         const newVersion = new Version({
           versionname: "0",
           registry: Bregistry,
-          link: "matchmaking" +
-          "-" +
-          req.body.name +
-          ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
+          link: "https://application.oistream.com/" + req.body.name,
           createdAt: Date.now(),
         });
         console.log("trying to create version with"+newVersion);
@@ -595,10 +589,10 @@ router.post("/create", (req, res) => {
           mmDeployment.spec.template.spec.containers[0].args[4] = registryname;
         mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
         mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
-        mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-        mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
-        mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
-        mmIngress.spec.rules[0].host = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+        // mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
+        // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+        // mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
+        mmIngress.spec.rules[0].http.paths[0].path = "/" + deployname;
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
         mmService.spec.selector.app = "mm" + "-" + deployname;

@@ -138,10 +138,7 @@ router.post("/createversion", async (req, res) => {
         const newVersion = new Version({
             versionname: newVersionName,
             registry: Bregistry,
-            link: "matchmaking" +
-            "-" +
-            req.body.name +
-            ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
+            link: "https://application.oistream.com/" + req.body.name,
             createdAt: Date.now(),
           });
           console.log("trying to create version with"+newVersion);
