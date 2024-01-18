@@ -9,19 +9,27 @@ const appVersion = require('./routes/appVersion');
 const versionRouter = require('./routes/versionRouter');
 const authorization = require('./routes/loginRegister');
 const dashboard = require('./routes/dashboard');
+const logRoute = require('./routes/logRoute');
 const { mongoose } = require('mongoose');
-dotenv.config();  
+dotenv.config();
 const port = process.env.PORT || 5000;
 const app = express();
 app.use(bodyParser.json({ limit: '30mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
-// app.use(cors());
+//config.EnableCors(new EnableCorsAttribute(Properties.Settings.Default.Cors, "", ""))
+//app.UseCors(CorsOptions.AllowAll);
+//app.use(cors({
+// origin : 'http://localhost:3000',
+//}));
+console.log("reached begining");
+//app.use(cors());
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Origin', '*'); // or '*' for any origin
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
+console.log("reached end");
 // app.use('/app', AppRoutes);
 // app.use('/version', versionRoutes);
 
@@ -30,6 +38,7 @@ app.use('/appversion',appVersion);
 app.use('/version',versionRouter);
 app.use('/authorization',authorization);
 app.use('/dashb',dashboard);
+app.use('/logs', logRoute);
 
 app.get('/',(req,res) => {
     res.send('Server is ready')
