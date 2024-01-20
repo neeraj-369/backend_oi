@@ -14,8 +14,8 @@ const { mongoose } = require('mongoose');
 dotenv.config();
 const port = process.env.PORT || 5000;
 const app = express();
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+// const server = http.createServer(app);
+// const wss = new WebSocket.Server({ server });
 
 const kubeconfigText = `
 apiVersion: v1
