@@ -9,7 +9,7 @@ const appVersion = require('./routes/appVersion');
 const versionRouter = require('./routes/versionRouter');
 const authorization = require('./routes/loginRegister');
 const dashboard = require('./routes/dashboard');
-const logRoute = require('./routes/logRoute');
+// const logRoute = require('./routes/logRoute');
 const { mongoose } = require('mongoose');
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -72,52 +72,52 @@ app.get('/',(req,res) => {
     res.send('Server is ready')
 })
 
-wss.on('connection', (ws, req) => {
-  // Extract the pod name from the request path
-  const path = req.url.split('/');
-  if (path.length !== 4 || path[1] !== 'logs') {
-    // If the path is not in the expected format, close the WebSocket connection
-    ws.close(4000, 'Invalid path');
-    return;
-  }
-  const podName = path[2]; // Assuming the path is in the format /logs/pod_name
+// wss.on('connection', (ws, req) => {
+//   // Extract the pod name from the request path
+//   const path = req.url.split('/');
+//   if (path.length !== 4 || path[1] !== 'logs') {
+//     // If the path is not in the expected format, close the WebSocket connection
+//     ws.close(4000, 'Invalid path');
+//     return;
+//   }
+//   const podName = path[2]; // Assuming the path is in the format /logs/pod_name
 
-  // Fetch logs for the specified pod
-  const namespace = 'tenant-74334f-oidev'; // Replace with your actual namespace
+//   // Fetch logs for the specified pod
+//   const namespace = 'tenant-74334f-oidev'; // Replace with your actual namespace
 
-  // Function to periodically fetch logs and send to the WebSocket
-  const fetchAndSendLogs = () => {
-    coreV1Api.readNamespacedPodLog(podName, namespace, { tailLines: 10 })
-      .then((response) => {
-        ws.send(response.body);
-      })
-      .catch((err) => {
-        if (err.statusCode) {
-          if (err.statusCode === 404) {
-            // Pod not found, send a creating message
-            ws.send('Pod is creating...');
-          } else if (err.statusCode === 400) {
-            // Handle other specific status codes as needed
-            ws.send('Pod is creating...');
-          } else {
-            console.error('Error fetching pod logs:', err);
-          }
-        } else {
-          console.error('Error fetching pod logs:', err);
-        }
-      });
-  };
+//   // Function to periodically fetch logs and send to the WebSocket
+//   const fetchAndSendLogs = () => {
+//     coreV1Api.readNamespacedPodLog(podName, namespace, { tailLines: 10 })
+//       .then((response) => {
+//         ws.send(response.body);
+//       })
+//       .catch((err) => {
+//         if (err.statusCode) {
+//           if (err.statusCode === 404) {
+//             // Pod not found, send a creating message
+//             ws.send('Pod is creating...');
+//           } else if (err.statusCode === 400) {
+//             // Handle other specific status codes as needed
+//             ws.send('Pod is creating...');
+//           } else {
+//             console.error('Error fetching pod logs:', err);
+//           }
+//         } else {
+//           console.error('Error fetching pod logs:', err);
+//         }
+//       });
+//   };
 
-  // Fetch logs every second and send to the WebSocket
-  const timeperiod = 4000;
-  const logFetchInterval = setInterval(fetchAndSendLogs, timeperiod);
+//   // Fetch logs every second and send to the WebSocket
+//   const timeperiod = 4000;
+//   const logFetchInterval = setInterval(fetchAndSendLogs, timeperiod);
 
-  // Handle WebSocket connection closure
-  ws.on('close', () => {
-    console.log('WebSocket connection closed.');
-    clearInterval(logFetchInterval); // Clear the interval when WebSocket connection is closed
-  });
-});
+//   // Handle WebSocket connection closure
+//   ws.on('close', () => {
+//     console.log('WebSocket connection closed.');
+//     clearInterval(logFetchInterval); // Clear the interval when WebSocket connection is closed
+//   });
+// });
 const { MongoClient, ServerApiVersion } = require('mongodb');
 MONGO_URL = "mongodb+srv://oistream:H8sVnAHkfo0k5V11@oistream.fda4hmn.mongodb.net/?retryWrites=true&w=majority"
 const uri = MONGO_URL;
