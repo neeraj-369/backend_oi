@@ -38,9 +38,9 @@ users:
     token: CHtnnc6xgtrQGH9pQ2P9cngsDCdzjpdQmfV7kF9C
 `;
 // Replace these with your Kubernetes cluster configuration details
-const kubeConfig = new KubeConfig();
-kubeConfig.loadFromString(kubeconfigText);
-const coreV1Api = kubeConfig.makeApiClient(CoreV1Api);
+// const kubeConfig = new KubeConfig();
+// kubeConfig.loadFromString(kubeconfigText);
+// const coreV1Api = kubeConfig.makeApiClient(CoreV1Api);
 app.use(bodyParser.json({ limit: '30mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 //config.EnableCors(new EnableCorsAttribute(Properties.Settings.Default.Cors, "", ""))
