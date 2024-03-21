@@ -15,21 +15,23 @@ const kubeconfigText = `
 apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvVENDQWVXZ0F3SUJBZ0lSQU9aYmIxbVZkUk5pbkVZd05aR3d5TGd3RFFZSktvWklodmNOQVFFTEJRQXcKR0RFV01CUUdBMVVFQXhNTlkyOXlaWGRsWVhabExtTnZiVEFlRncweU1UQTRNall3TURNeU1qWmFGdzB6TVRBNApNall4TWpNeU1qWmFNQmd4RmpBVUJnTlZCQU1URFdOdmNtVjNaV0YyWlM1amIyMHdnZ0VpTUEwR0NTcUdTSWIzCkRRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRFkra0FTSzFOZFdwNW5XdExBN05mSS9rc3k0cU9mOWVZRGNxb00KemppODFHQUJlenNFSjBFc1NVclhpSUd6Z29TYkV3L1BKQXZDZGRURXRlTWQ0RU93NnNTVWU4SFFHV1dxcTBmVgpvdzMwanJQcWxramEzSmZhWWJMWi9Pc3A2enZXbml3eXNTVmJlQmJFTlFFL2RuVDN4UmdTTFl3TlJGcDcwZnU1CkJqbW9MZjhjYzdFMlp0TkF1cHRRVUJiMzdLSnlJYlJYOTdnV3B0QnJPOXN0ZWFTMUkwcGNTSHBvYWFBYzBIbGgKYkRNZTQyYkxFbjFkQ0tud1ZEWnBRSVAvTFc0UGM4NmEvYTJDZzZnMmJCcWhTWFFPNzBybHZ0aXVGYmwrTDZoRApxZU14ckl5MmR1MWE1VU9HcU9iTDkwczIxVE0vR3F5MTRaQU1ndVhsTFlCajVIWi9BZ01CQUFHalFqQkFNQTRHCkExVWREd0VCL3dRRUF3SUNwREFQQmdOVkhSTUJBZjhFQlRBREFRSC9NQjBHQTFVZERnUVdCQlNKTUpNUDJnOHAKeGxUelB4Ulp4cFkyZEFOMVVUQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFEQWYxb3R2Y1FzZjZVODN2b0RvSAo3ZVhnSUdPUVZoMzh6VlgwSzh5cUV1ampjcDRZZ0o2OXJoektsQ3A3SGlMZEdzV3dmRkc3b25NeUtxYUNHSWJnCmFHc1NzVU9nOHhxelJ1UEpJU2RDa3B6VVdualNmRW03dU5vRlJJd0x6UHFmZ2IrWnJRNEdSaGFQMkxudkFKZ1oKbVNCczZMeDdGWnk0R2xYdlQ1QUhaMnNvSHdSMnNONEFqNjdkcHFzVk80QUcyZk0remg5MGZHTkRhSWxVeFVySwoxNGlUVW9IUVVlU2FhcTIrdkdWYmhlK2lOVW9DNTVmV29oL2svVm1PSVdyRnFwTW5IeFdKditHakRTZ3Q0WldWCk1qTVdCNFZsbWlCbmpEM25ib0dZVHJGVXd5M21GV2hnejNIanpRNzF2bDVlTnFaRzFtVGwycTRFUTBScE5Sd1kKRGc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
-    server: https://k8s.ord1.coreweave.com
-  name: coreweave
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUU2RENDQXRDZ0F3SUJBZ0lRTncvOHJwRmdBQ0RPMU1xN2t3SU9QVEFOQmdrcWhraUc5dzBCQVFzRkFEQU4KTVFzd0NRWURWUVFERXdKallUQWdGdzB5TkRBek1Ea3lNRFF5TlRSYUdBOHlNRFUwTURNd09USXdOVEkxTkZvdwpEVEVMTUFrR0ExVUVBeE1DWTJFd2dnSWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUNEd0F3Z2dJS0FvSUNBUUMwCjVKRXJ2UjhGL1gvd21PQTVKVW1ZUGE5aEZ5L1F4YThiRGp6MVk1K1lob3RBQ3ZOWjZYZ2ZBcjR3KzYrb3EyTGwKWkptVEdUb3k1WFlnZk83RlFoVkZ4TjNTTUd3OU1OaGdJWWc4cVdVQmhYRENYZHZqUGFwZys4NzA1a1FvTHhOQwpDeUMxYThiWGswYzBOZSsrV1l6WUFEZUlVQmtrQVJpaTNra1d0NEtyMEFDOExJVWhjbzQ3WG9EdCtSVzNreGRLCm55aWk5T213R0hnU2pRWklGcjFTd3hyYlRIalFxeDlJRktvRXlyRUVpTmdRaDhDdU8wcVpkanc0SjBuUWl1WUoKcTVDelMrMnl6SEtUS0JmSUNzdkE5Ulk1aGFpY2pKQktZTEhKVE13SmwzbFFJY3ZUaG9yWm5LWHRrbTdZQytaOAp0TjFrcEJuVy8xWUdUMGZaOWlWNnVlMnVLcExxanU3MHRMc3RXQmNRZ01NRkNaTXAzcWM0OFRNYVJjVVJSYjZiCjdGRGtTZmhxb2IweVB2Z0IzVldOdFI0cDM0Z1VJeVoxaWRrWWh5UVk1bFVQdEJaZkJTZnZEMFpEdEFONWpNWWYKTndmekY1cWlzUjBTTkMydk5GNDVuc285WUV5ZUcxK2pncnk1c3NOTUdCVjc0RXcwNzhYbjliUUM2cWZzY1cvSApUdDFXb2sxREJYekNzeUpnZitRdit0NWtmRFVldEZXZWNPakF4dzJYM1c3cDlZcG1GUXJacG9FaHB5Mkw4TnJWCkdScjlJL05abkZ6SWZLek1vcVBMNTUySFFmNjBZOFdoaS9YM0c0cThIeEcxNVF5SHMrNTZuNjB4aFI2V2NxQ1QKQjd4TklDTUhYV3ZBeld1QWZXRzFmZVNLQnIwVjFLMzN6Q3dEc3JzbkRRSURBUUFCbzBJd1FEQU9CZ05WSFE4QgpBZjhFQkFNQ0FxUXdEd1lEVlIwVEFRSC9CQVV3QXdFQi96QWRCZ05WSFE0RUZnUVVoaEZycnBML1RmTWFmNjVMClptaFZqcVZLL2FJd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dJQkFBWXIyeC8xVU85TUxsVG92SXRFWmRLMmpFclkKQURZUEtPMHo1aGdPWkRoVkVoTGp4aVk1c1pZMWFRWGt5TG4vSlJQUDREUDdHYnp4cVZCejQ5UGdvcTZUbUFTVwpobDNnRFlnRlh6dUYxWGFnTnBNemcvTnpjN0JiMkFDUVBMVmtSN3BJNVEralg2cjlPdlpjWFMvQlptNUdwS2xCCkJNRW14aHdpZksrYStCVXBjbFhPRmE5clVSSEVWRVJtdVZqKzBDVC9yK0toaXI3ZDY1Nlhha1VHUjNJOVRrQWkKUVZmdVpaUTh2cExDZDQwdEtMZ3Y1d0lIWldZeFRRN2o4RGhsN3h5WnVoVzRiaHh4VEsyUG1qUTA1cFlUOFBnOQpTbG11bFhmQnN0dkRzUHd1eEtOQ3Z4amlNR1I1eHltT0orVlBPcFVLOXVQOGR3cGgwL2U5YlIrQ29KMFBybndUCnBBemRXcnhxS2dselh5Y1Q0QmQ0Y3BpTjRZMVJVTUh0WTNMVDQrNnA3OHlBZzQ3YWppTTVadW40SGlGOEMxbGYKZWsyQ3FhOVMvRGhTVEVrajRCTXJZQTI2REkyeUNQdjV5UGYyZ242bDFxNDVWbGZqa1BQUVA2MTF5aW9QSkkxSQo2TXdQakRsdDV3VGEyNHlBOXdqN2wzeTNSTDFESTZBa0x0TlFVNHFxbWpCcUJkdlVlVXV0UjExTTRVMjRtdGFDCkdCWVdrYmdRMW5YQjI1d1FlMjR6YXAxRGFEWlhIcVpIK2d5RHdZNmduOGYzZWFRd3NTS3R2TG5MU293ZWVmSjMKdzhBdXVXNC83VENaejRMam83NmJLWVlkQ3lycXJhRFREb0dqcVNhOE5RMGRWZWVyMUNCM0I2VUpuQmtFSTZORQpVOUxFYXhTcU8xK2Z3TWhyCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    server: https://oistream-dns-vrj8z2f2.hcp.centralindia.azmk8s.io:443
+  name: oistream_new
 contexts:
 - context:
-    cluster: coreweave
-    namespace: tenant-74334f-oidev
-    user: token-Kkn7HYfPzuXKApoTiaMk
-  name: coreweave
-current-context: coreweave
+    cluster: oistream_new
+    user: clusterUser_oistream_oistream_new
+  name: oistream_new
+current-context: oistream_new
 kind: Config
+preferences: {}
 users:
-- name: token-Kkn7HYfPzuXKApoTiaMk
+- name: clusterUser_oistream_oistream_new
   user:
-    token: CHtnnc6xgtrQGH9pQ2P9cngsDCdzjpdQmfV7kF9C
+    client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZIakNDQXdhZ0F3SUJBZ0lSQVAxVm14RC9pdGl6dysrWGE2bUxGNmt3RFFZSktvWklodmNOQVFFTEJRQXcKRFRFTE1Ba0dBMVVFQXhNQ1kyRXdIaGNOTWpRd016QTVNakEwTWpVMFdoY05Nall3TXpBNU1qQTFNalUwV2pBdwpNUmN3RlFZRFZRUUtFdzV6ZVhOMFpXMDZiV0Z6ZEdWeWN6RVZNQk1HQTFVRUF4TU1iV0Z6ZEdWeVkyeHBaVzUwCk1JSUNJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBZzhBTUlJQ0NnS0NBZ0VBblcxM0dTMUVLd04zQTZUVjJINm8KZVQ0SmhZeHBhQ3BmdDArR3E5SjF2TzZZNnpBRFJhMklsZ3RPdUNLR28zRGtKUGllQ3ZHYTZFMlM1NjZoYkpGcwpuRFRHQWFwbjlEMkNTZkQ3TVFmRUdKUVc4ekx6WEtFSnZCSkdsbitqNVQzZDU0Qngxb2pzQ3ZaMVJOeTY4Wk02ClJJVUYzdVY0Zkg4cDNyaEpwOFpHbHBtcmttRDFRSXg4QW9ETGg1TVozckNudEtNRys0cTJvODZKOE55VzFERHgKc1FGck9kVmVkOG9HZGkzT1c5NkYyZHhTT1lCZFM1SUZzY2k3TWdaTzd4b29RZTE5QmZkdjcrYjlad0p1QTNCUApPWVlMSTNmY0NvSzlUSjZTbEhTQXlxcVMyNENNZUhsWE53aHIyYXdSNHZkUkhEeVBNWnFteWxwVWttQ0xnQlBWCjVoUXFUcmJWbHFSSitXMmJER1BwRExJK0tWYWFGQXR3M2VVbHJuejNVV201NmVVRWFIeEdIdE41c1pRYTFHWVYKSjRSSk9hU2pNQS90SzBteEJWM2MxbDJMc0NpRmI3b3dLK3haSFhCSXNUVHFkOTJqVExGREttcGhwcWsrV21ESQpSK0R2WTl6bWVaSmNiOVUwd1lKamdkeXcwbVQyOGsvTVhzSG1jRFBrRGtNRnllano1YXZUNnQ0Nlh6L2htcHZECkU4RWlBZWw3NUhzeittV1NuN25SNktWektnSDVYM01BMHdTOXNkVUNRUXE5dnFIamh0V3VLaXNJeitvUGJHK04KWmxRY2FaNkV3VFlzWjZZZTA4ejRlakRNU2ptdHVWT1EydytxaGEwei9TUjR2ZUxMd3F1eG9UdnlodVY0UkFvNQpWWmZFWlhBMjhpNmoyWFM2Qyt0Wk1lY0NBd0VBQWFOV01GUXdEZ1lEVlIwUEFRSC9CQVFEQWdXZ01CTUdBMVVkCkpRUU1NQW9HQ0NzR0FRVUZCd01DTUF3R0ExVWRFd0VCL3dRQ01BQXdId1lEVlIwakJCZ3dGb0FVaGhGcnJwTC8KVGZNYWY2NUxabWhWanFWSy9hSXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnSUJBRnIyTDdqTEVYUDVNRDlGaHN3SQpNalE5S0VpK0g5RWJjK3VlRC8vUEp2N1k3QnVDcnFIT1kzdlVXK3Fzc1BFMnNTRFMyeGlNVEpwNk9JMGJHVUJUCngyUmR4R3BjK0dqZmVlaFFDRVpDb3JETEVqVWxYditDa0JVa1BTa20vMTVUUnVtK0M4a0hreGl5TW5MS2dCQmwKajJ6dUNnOWEyNU9MMGs4STllNmo1MzdVejdkcU1saXUvem1jNWpJZVVDVzcwSFRxbGRBMUlHMGRKd0ZUM1BwNQo3VG05aGI4T3FYTEF2VDBBUHVFTDlOdzJ2cGlJa2JCbGxYOWYyMktwRlFrNUt5T3duaHovQjJ2ZHI1Yzlha2EvCmthWlc4MkNEdWQ1dW52K2lmQ2N6RzdmSE9zQ3VpdFhTMStIWGh6K2FFOW1RUDgzUXVNMm1uR29MWi94NS9FY2kKSXhLNktRMy9QcGc3c2o1NC9KS1NBRUFsR2pES1BHK2xhSWZlMXlhUEZBT0lSNjVuNXlqaXZybXArbVRtY2JEdwoycktsai93TzQxKzRaUGllMXk3WVdmRUtrS3hXRXg5OGd3VWswbU5OT1prVkFWMGR2NjBBZ1o0V0Jyb0tZUWU3CnVhalplVWkrdUQvaUZWanFXaWIrRHRSSWNWSE95UnNKaitPMDVUeGtpZ0RIMWtvempFb05vWmY4YnFJZ0lmVloKeVZFdzJvcDZiUkl2NERxc1FpeWFjYitRZ0luM1NDZFZIMUVyUjA1dXVRdUpTQmRjUTNSVklxZllNK3ZCQ0QrVApDeGVPb1FVR2xGNHc1WGoyTXVrU2tqTkNIRk9udjBidXVUenFSZTIzZmlmbitWNkFLNHFCTkVPNDNHcFZZaEk4Ck12ZlBDa25IZG4wVXlJZGtqcGxvbWVuSgotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    client-key-data: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlKS1FJQkFBS0NBZ0VBblcxM0dTMUVLd04zQTZUVjJINm9lVDRKaFl4cGFDcGZ0MCtHcTlKMXZPNlk2ekFEClJhMklsZ3RPdUNLR28zRGtKUGllQ3ZHYTZFMlM1NjZoYkpGc25EVEdBYXBuOUQyQ1NmRDdNUWZFR0pRVzh6THoKWEtFSnZCSkdsbitqNVQzZDU0Qngxb2pzQ3ZaMVJOeTY4Wk02UklVRjN1VjRmSDhwM3JoSnA4WkdscG1ya21EMQpRSXg4QW9ETGg1TVozckNudEtNRys0cTJvODZKOE55VzFERHhzUUZyT2RWZWQ4b0dkaTNPVzk2RjJkeFNPWUJkClM1SUZzY2k3TWdaTzd4b29RZTE5QmZkdjcrYjlad0p1QTNCUE9ZWUxJM2ZjQ29LOVRKNlNsSFNBeXFxUzI0Q00KZUhsWE53aHIyYXdSNHZkUkhEeVBNWnFteWxwVWttQ0xnQlBWNWhRcVRyYlZscVJKK1cyYkRHUHBETEkrS1ZhYQpGQXR3M2VVbHJuejNVV201NmVVRWFIeEdIdE41c1pRYTFHWVZKNFJKT2FTak1BL3RLMG14QlYzYzFsMkxzQ2lGCmI3b3dLK3haSFhCSXNUVHFkOTJqVExGREttcGhwcWsrV21ESVIrRHZZOXptZVpKY2I5VTB3WUpqZ2R5dzBtVDIKOGsvTVhzSG1jRFBrRGtNRnllano1YXZUNnQ0Nlh6L2htcHZERThFaUFlbDc1SHN6K21XU243blI2S1Z6S2dINQpYM01BMHdTOXNkVUNRUXE5dnFIamh0V3VLaXNJeitvUGJHK05abFFjYVo2RXdUWXNaNlllMDh6NGVqRE1Tam10CnVWT1EydytxaGEwei9TUjR2ZUxMd3F1eG9UdnlodVY0UkFvNVZaZkVaWEEyOGk2ajJYUzZDK3RaTWVjQ0F3RUEKQVFLQ0FnRUFuV0psY2Q4bVNsWlJjbXdsZWlYTjZrQVNKdGhrUE1ZNElMdzVwNmRsRzdmeFd4Y0ovbXZwcEErego2RFJrSkJ2bGlleWZtOU5GQ2I4Y0FkRTlBcHcwVjhvT3RuV1ZMY0VjY3kyZkFycC8yZzZiRHhHOTZMbjZVSEo0CjdWYTRGS09RS0RQcUd3K1I0N2ZYTHp2NURUQWlUWVFyaFZZbDZWajhFL1JyZG5hcjlUMjJJRVljaWlhb2g1d1oKWGZXN0pEMjV1OFpNWWNlZ3BnMERMTEJyZmNGY3I1ZjZpYnY5a0lhQmhUNXdFcnBaV0orQitJaVRQTXpFTXFPNgpPZDNDcGhtaGE1K3dvUGxwaUE2SEFhZVZNb3ppTjJFQjI3aWxYRUN1WFY0ZXJwbjJkQ2FwWVJhWDJJMSttcjhwCmkxa1NITFVoK3JlMGRHUG5JVi9ETXYrZ0Z6QTlZeERwMitlRklwcHRzbTRyL205QWRmK3QvQU9USVVXQjB0TlQKQWZVU1kxVkR3WmNlcy9TaC9wZlY1aTlKLzFkMDVqVjN6RU5mRTNhMXFnZ3AvbUNabVp6VGF5V2lYUnAvWU1ZMAo5MW9JdnR3Y2xvb21uWFdJV0xNeHRRNHphNE5zY09sT0FpMkprR20zMTRhbGNwSk9TN2tQOXJUckkrWitPckpFCml4SzIwSjJVVTVrYldhQThWU3hwMVEwZktWWU0zV3NZdm53QVY2dUorN05na2lvZTZZcEZiM0dNY015VWd6Q0kKbmdUTm1KbWZDd0tyLzhqRUtHRzQzWGVreE1HWEJzcjhZcmRBUFNHUmlmZXBnNVRRVCt2N0dwN0Q5OWxUWGtndgpHYVQraFQ1eFkreEc4THQ4MkN1M3RMOC9acktSVUZPT1dmSVNKUjdwYW1ra1RNeUpSc2tDZ2dFQkFNSzhxVTJsCkF5WWY3VkNyczFJNm5ueXpZdFczL1JrN20rMHRlQUpodGppblJ2TUNrTWgyL3NwTGJYMzBUNS85ZkV0VzJDQnMKVXhxdVhIS0VzZHJhK2dLZ2xwZVhRVkIvSEhZRGxPeEgxRno3V0ZOQlJNMU91dG1COWlhdS9oUGw2NDFLMzVsTwpUSndaNDFaaFdWYitiTE9KV1RCSFhGOVprK2tCZFd0THVBd2VtSmZQRXBIVmp1QUlPK3U3MndiRS92Rmx2V0h0CjQrZTBDTlJwSmZEbFZJVHpmd2FuQUxpUXBxZzRIYldORVMvSXJTYWlBbkplSkwyUHVyQ1lHU3BvbUZONDJMNkQKc1ZJSHRxMUtLdEhRWXkvUzZ4Si9IZUx0Vkl1ZGJnSjBLWWh6UFZXM0ZaRmtDSTU5WHBwb3l1RTJHWjZRb042WgppQU9rVDB4emZxNGJBbk1DZ2dFQkFNNzBEb1RLWHBVV1JQRFcvdGh4dSsyUUF5aGFFUkV1T0Nzcng1OGtzRW5TCk1NK05RdUtYU0JvQzVDK1lCcTVEMkgyVjdxVnF1cEV0Q09zem9YU1c3UXFadkRDdFIxMTh4TGZKSTZKTnh3NmgKVHJqRzlQdU5NbnBHeUJzNEJjbExxdndleU9hYlFqZGpubktIbmVzMTlBQ1lGK3BYelVwOXBHRFh4SkM4dlUxYQp2ZEFLVFp1TEFPeG04MThDUWNSdEI3WG5ZOC9pK293M3pvbDVzWkh2MmE3dkpxdU5NRWxWV2M5K2FCZ2RGWm4vCkhJUkdHenlRZ1kvV0hqYU41VjU4dEhUdUhCK2RWT0xxOEpuYTN5WnRFZGxXdHNBaExPOEJzeWwyc2Rua3l0TjUKak9RN21hMlZ6TkJibVNHWmttSzREaFpKQlhxQXloTlBiaVBiakRGV1ViMENnZ0VCQUlVYzdTWFVEQWo5ZmZ6TQp3WEVOL05RRTB5Ui85aFJQZU5CeGFqMUdpWWJFWVcwdmJjUjZBc1JKTnZrSURYMnhpa3I5ZkJMOXVQamVBdmVNCjJQNWUvTkxhN3RXRVlQTWpVRk1qTTZNbm5uUklveUdWMWUvNVJ5UHpBRTJGQk15Wk42Q0hjN3labHlpRlVhNzAKTUZ1VTRyeit2K2FPZ1FmMGRYU3F1SmExVllPRFRvOUd6c3k5REVMN25lb1BxVEpCYW51Y0xnNUl6S2JQbTlHRwpacGI2VEFIdGFBRW1Hd29PWnIxS1RwU1JieFFZdXJOVHZ4UnFZZmJwenBWMEFvL0ltNGREYmZVY2xCTWNqclI1CnBEZHptTGxTRmJtNUJyYmR3Qk1IYy9GZGNoNkJsNFdGOXNwQmRNL2h4czhKbnRTL1pGZk5TUW1nTFNkQUk2eUEKcmpGWTZSMENnZ0VBUWZOcXNReWdxWmdvTGl3Rm1NcGQzaTMzbzZOWUx3WndwZWxVdXpXQTdIV01Vb2dzMlhMbQpha3VqbGpzM1hjK0hMVFpiaitGOFJRbDUveUk4QUtDY043V1lVRmJZR0VYTGx0b0ZmaEtWTGVkZjQraWJaNUt1CmxHTDhJQmh4VjUzQ2hvZjA4L0JrWUt4aGNSUWcwalVtWmc0U0NQOGtEK29NT1VScGdzcHk5VFRHcW9hdUJyUjgKZmRtdEV3andGbjI4YUU2dDh6RGRNVlFUZ0tJRVlZSnk5NW1FMUVTeEw1MkFlbXhKRmU0bTFTV0VXKzdQZlRSNwo1VytSdjBibTRuNlJMM1kyQmlrb1JRd2owcFA2YXc5MUViTGRtRXE2UEF4cG9Qd1BYMlhXOFIrYU01MStzdCs3CkhtY2lYSi9KRTZhZDdxSWttYzV6RjBaSHppdUgrSzBPYlFLQ0FRQm5hK25lbklyR0hORGxMa2o2d0NHYWdlK2sKUjdXNmdrenZ5NmdqTUs0R3VjSzBiTXhHQkNNazVheUV6dzVJdnFIUmhVU3htRGNiNWFYaWFGQ2ZsNUJMeERjKwovWGl3V2hRaXN2SWNTTzFXK3kvMDRFZ21ScGdYMDZYQ1FiaXFSa1ZQRGsyOWY1aDduRDMxdWFRd0c1YnZKZHA1ClFPZmFnODdJVTNJOU5hZXBHZ0tIRnZXNHhiNXArR3JDYXp6WUZFa3hEQUw0TWhNUFJWcGZOMC91MFNsT0xhbFgKQjQvQXRyRmNCM3dKaEh3T0xVeUYrQWcrQk8rTXlrTmhMZGtLY0hVOFdLZllqdHgvcWkrK25QUzNObngxRmU2QQpPOWR2aEc3L2h0Rms5bEtpODVwdmxKZm1mNzR5eEx4TXBoeWViZ01WQXk0NlIxZS96TVB1VDBnVWVIWXMKLS0tLS1FTkQgUlNBIFBSSVZBVEUgS0VZLS0tLS0K
+    token: nbdx8z9henftao24g6to8vrena9z36fhjzwn69kuy19hba6ch78yib6jla8kbcrypxp0nuxgqql78bjhlaueyfi023f1fmgp1mqyi3g2pervmiglqnq5xkgnd0qvybsm
 `;
 
 const kc = new k8s.KubeConfig();
@@ -64,7 +66,7 @@ var mmDeployment = {
             image: "streamoi/match:mo",
             imagePullPolicy: "Always",
             args: [
-              "coturn.tenant-74334f-oidev.lga1.ingress.coreweave.cloud:3478",
+              "coturn.oiplay.in:3478",
               "PixelStreamingUser",
               "AnotherTURNintheroad",
               "neeraj",
@@ -137,22 +139,21 @@ var mmIngress = {
   metadata: {
     name: "mm-ingress",
     annotations: {
-      'kubernetes.io/ingress.class': 'traefik',
+      'kubernetes.io/ingress.class': 'nginx',
       'nginx.ingress.kubernetes.io/rewrite-target': '/',
-      'traefik.ingress.kubernetes.io/router.middlewares': 'tenant-74334f-oidev-redirect-secure@kubernetescrd',
-      'cert-manager.io/cluster-issuer': 'letsencrypt-prod'
+      'cert-manager.io/cluster-issuer': 'letsencrypt'
       },
   },
   spec: {
     tls: [
       {
-        hosts: ['*.matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud'],
+        hosts: ['*.matchmaking.oiplay.in'],
         secretName: 'ssl-certificate-matchmaking',
       },
     ],
     rules: [
       {
-        host: "matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
+        host: "matchmaking.oiplay.in",
         http: {
           paths: [
             {
@@ -360,7 +361,7 @@ function getRandomIntAsString(min, max) {
 }
 
 
-const namespace = "tenant-74334f-oidev";
+const namespace = "default";
 const k8sApiff = kc.makeApiClient(k8s.CoreV1Api);
 async function checkPodStatus(podNamess) {
   let completed = false;
@@ -465,7 +466,7 @@ router.post("/create", (req, res) => {
           const newVersion = new Version({
             versionname: "0",
             registry: Bregistry,
-            link: req.body.name + ".matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
+            link: req.body.name + ".matchmaking.oiplay.in",
             createdAt: Date.now(),
           });
           console.log("trying to create version with"+newVersion);
@@ -507,9 +508,11 @@ router.post("/create", (req, res) => {
           mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
           mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-          // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+          // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".oiplay.in";
           // mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
-          mmIngress.spec.rules[0].host = deployname + ".matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+          mmIngress.spec.tls[0].hosts[0] = deployname + ".matchmaking.oiplay.in";
+          mmIngress.spec.tls[0].secretName = deployname + "ssl-certificate-matchmaking";
+          mmIngress.spec.rules[0].host = deployname + ".matchmaking.oiplay.in";
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
           mmService.spec.selector.app = "mm" + "-" + deployname;
@@ -544,7 +547,7 @@ router.post("/create", (req, res) => {
         const newVersion = new Version({
           versionname: "0",
           registry: Bregistry,
-          link: req.body.name + ".matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud",
+          link: req.body.name + ".matchmaking.oiplay.in",
           createdAt: Date.now(),
         });
         console.log("trying to create version with"+newVersion);
@@ -586,9 +589,11 @@ router.post("/create", (req, res) => {
         mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
         mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-        // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+        // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".oiplay.in";
         // mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
-        mmIngress.spec.rules[0].host = deployname + ".matchmaking.tenant-74334f-oidev.lga1.ingress.coreweave.cloud";
+        mmIngress.spec.tls[0].hosts[0] = deployname + ".matchmaking.oiplay.in";
+        mmIngress.spec.tls[0].secretName = deployname + "ssl-certificate-matchmaking";
+        mmIngress.spec.rules[0].host = deployname + ".matchmaking.oiplay.in";
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
         mmService.spec.selector.app = "mm" + "-" + deployname;
@@ -653,7 +658,7 @@ console.log("Came to reset");
 res.status(200).json({message: "came to reset"});
 
 
-const tenantNamespace = 'tenant-74334f-oidev'; // Set your tenant namespace
+const tenantNamespace = 'default'; // Set your tenant namespace
 
 // Create Kubernetes API clients
 const coreV1Api = kc.makeApiClient(k8s.CoreV1Api);
@@ -750,9 +755,8 @@ try {
 
 console.log("Deleted mongodb all data");
 
-
-
 })
+
 
 router.delete("/:id", async (req, res) => {
   try {
@@ -760,7 +764,7 @@ router.delete("/:id", async (req, res) => {
     const name = req.query.name;
 
     console.log("this is in app deletion,"+ id + " and hte name is "+ name);
-    const tenantname = "tenant-74334f-oidev";
+    const tenantname = "default";
     var deploymentNamei = "mm-deployment" + "-" + name;
     var serviceNamei = "mm-service" + "-" + name;
     var ingressNameis = "mm-ingress" + + "-" + name;
