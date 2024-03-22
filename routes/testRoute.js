@@ -90,13 +90,13 @@ var mmDeployment = {
                 protocol: "UDP",
               },
             ],
-            resources: {
-              limits: {
-                cpu: '4',
-                memory: '20Gi',
-                'nvidia.com/gpu': 3
-              }
-            }
+            // resources: {
+            //   limits: {
+            //     cpu: '4',
+            //     memory: '20Gi',
+            //     'nvidia.com/gpu': 3
+            //   }
+            // }
           },
         ],
       },
