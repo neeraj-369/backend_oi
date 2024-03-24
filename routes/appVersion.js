@@ -58,7 +58,7 @@ var mmDeployment = {
             image: "neerajpolavarapu/match:mo",
             imagePullPolicy: "Always",
             args: [
-              "coturn.oiplay.in:3478",
+              "coturn.oiplay.org:3478",
               "PixelStreamingUser",
               "AnotherTURNintheroad",
               "neeraj",
@@ -140,7 +140,7 @@ router.post("/createversion", async (req, res) => {
         const newVersion = new Version({
             versionname: newVersionName,
             registry: Bregistry,
-            link: req.body.name + ".matchmaking.oiplay.in",
+            link: req.body.name + ".matchmaking.oiplay.org",
             createdAt: Date.now(),
           });
           console.log("trying to create version with"+newVersion);

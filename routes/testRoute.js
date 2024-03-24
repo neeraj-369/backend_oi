@@ -66,7 +66,7 @@ var mmDeployment = {
             image: "streamoi/match:mo",
             imagePullPolicy: "Always",
             args: [
-              "coturn.oiplay.in:3478",
+              "coturn.oiplay.org:3478",
               "PixelStreamingUser",
               "AnotherTURNintheroad",
               "neeraj",
@@ -141,19 +141,18 @@ var mmIngress = {
     annotations: {
       'kubernetes.io/ingress.class': 'nginx',
       'nginx.ingress.kubernetes.io/rewrite-target': '/',
-      'cert-manager.io/cluster-issuer': 'letsencrypt'
       },
   },
   spec: {
     tls: [
       {
-        hosts: ['*.matchmaking.oiplay.in'],
-        secretName: 'ssl-certificate-matchmaking',
+        hosts: ['*.matchmaking.oiplay.org'],
+        secretName: 'wildcard-matchmaking',
       },
     ],
     rules: [
       {
-        host: "matchmaking.oiplay.in",
+        host: "matchmaking.oiplay.org",
         http: {
           paths: [
             {
@@ -466,7 +465,7 @@ router.post("/create", (req, res) => {
           const newVersion = new Version({
             versionname: "0",
             registry: Bregistry,
-            link: req.body.name + ".matchmaking.oiplay.in",
+            link: req.body.name + ".matchmaking.oiplay.org",
             createdAt: Date.now(),
           });
           console.log("trying to create version with"+newVersion);
@@ -508,11 +507,11 @@ router.post("/create", (req, res) => {
           mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
           mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
           mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-          // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".oiplay.in";
+          // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".oiplay.org";
           // mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
-          mmIngress.spec.tls[0].hosts[0] = deployname + ".matchmaking.oiplay.in";
+          mmIngress.spec.tls[0].hosts[0] = deployname + ".matchmaking.oiplay.org";
           mmIngress.spec.tls[0].secretName = deployname + "ssl-certificate-matchmaking";
-          mmIngress.spec.rules[0].host = deployname + ".matchmaking.oiplay.in";
+          mmIngress.spec.rules[0].host = deployname + ".matchmaking.oiplay.org";
           mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
           mmService.metadata.name = "mm-service" + "-" + deployname;
           mmService.spec.selector.app = "mm" + "-" + deployname;
@@ -547,7 +546,7 @@ router.post("/create", (req, res) => {
         const newVersion = new Version({
           versionname: "0",
           registry: Bregistry,
-          link: req.body.name + ".matchmaking.oiplay.in",
+          link: req.body.name + ".matchmaking.oiplay.org",
           createdAt: Date.now(),
         });
         console.log("trying to create version with"+newVersion);
@@ -589,11 +588,11 @@ router.post("/create", (req, res) => {
         mmHpa.metadata.name = "mm-hpa" + "-" + deployname;
         mmHpa.spec.scaleTargetRef.name = "mm-deployment" + "-" + deployname;
         mmIngress.metadata.name = "mm-ingress" + "-" + deployname;
-        // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".oiplay.in";
+        // mmIngress.spec.tls[0].hosts[0] = "matchmaking" + "-" + deployname + ".oiplay.org";
         // mmIngress.spec.tls[0].secretName = "redirect-secure-ssl" + "-" + deployname;
-        mmIngress.spec.tls[0].hosts[0] = deployname + ".matchmaking.oiplay.in";
+        mmIngress.spec.tls[0].hosts[0] = deployname + ".matchmaking.oiplay.org";
         mmIngress.spec.tls[0].secretName = deployname + "ssl-certificate-matchmaking";
-        mmIngress.spec.rules[0].host = deployname + ".matchmaking.oiplay.in";
+        mmIngress.spec.rules[0].host = deployname + ".matchmaking.oiplay.org";
         mmIngress.spec.rules[0].http.paths[0].backend.service.name = "mm-service" + "-" + deployname;
         mmService.metadata.name = "mm-service" + "-" + deployname;
         mmService.spec.selector.app = "mm" + "-" + deployname;
